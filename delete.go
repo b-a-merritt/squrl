@@ -20,7 +20,11 @@ func (s *SQURL) formatDelete() (string, []string, error) {
 		s.parameters = &parameters
 	}
 
-	query := fmt.Sprintf(`DELETE FROM %s."%s"%v`, s.schema, s.table, s.delimiter)
+	schema := ""
+	if s.schema != "" {
+		schema = fmt.Sprintf("%v.", s.schema)
+	}
+	query := fmt.Sprintf(`DELETE FROM %s"%s"%v`, schema, s.table, s.delimiter)
 
 	whereLength := 0
 	where := ""

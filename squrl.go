@@ -32,7 +32,7 @@ func New(table string) *SQURL {
 		err:       nil,
 		delimiter: " ",
 
-		schema:    "public",
+		schema:    "",
 		alias:     nil,
 		table:     table,
 		queryType: nil,

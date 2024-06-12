@@ -7,7 +7,9 @@ import (
 )
 
 func TestMultipleTypes(t *testing.T) {
-	query, _, err := squrl.New("User").
+	query, _, err := squrl.
+		New("User").
+		SetSchema("public").
 		Select("id").
 		Update(map[string]interface{}{"id":6}).
 		Query()

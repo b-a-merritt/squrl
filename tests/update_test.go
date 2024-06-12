@@ -1,7 +1,6 @@
 package tests
 
 import (
-	"fmt"
 	"slices"
 	"strings"
 	"testing"
@@ -10,7 +9,9 @@ import (
 )
 
 func TestUpdate(t *testing.T) {
-	query, parameters, err := squrl.New("User").
+	query, parameters, err := squrl.
+		New("User").
+		SetSchema("public").
 		Update(map[string]interface{}{
 			"id": 6,
 			"first_name": "ben",
@@ -44,6 +45,4 @@ func TestUpdate(t *testing.T) {
 	if !slices.Contains(parameters, expected) {
 		t.Errorf(`parameter mismatch - parameters '%v' do not contain %v`, parameters, expected)
 	}
-
-	fmt.Println(parameters)
 }

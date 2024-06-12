@@ -9,7 +9,9 @@ import (
 )
 
 func TestInsert(t *testing.T) {
-	query, parameters, err := squrl.New("User").
+	query, parameters, err := squrl.
+		New("User").
+		SetSchema("public").
 		Insert(map[string]interface{}{
 			"id": 6,
 			"first_name": "ben",
@@ -48,7 +50,9 @@ func TestInsert(t *testing.T) {
 	}
 }
 func TestReturning(t *testing.T) {
-	query, _, err := squrl.New("User").
+	query, _, err := squrl.
+		New("User").
+		SetSchema("public").
 		Insert(map[string]interface{}{
 			"id": 6,
 			"first_name": "ben",

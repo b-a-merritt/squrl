@@ -42,7 +42,11 @@ func (s *SQURL) formatInsert() (query string, parameters []string, err error) {
 		parameters = append(parameters, val)
 	}
 
-	query = fmt.Sprintf(`INSERT INTO %s."%s"%v`, s.schema, s.table, s.delimiter)
+	schema := ""
+	if s.schema != "" {
+		schema = fmt.Sprintf("%v.", s.schema)
+	}
+	query = fmt.Sprintf(`INSERT INTO %s"%s"%v`, schema, s.table, s.delimiter)
 	query += fmt.Sprintf(`(%v%s%v)%v`, s.delimiter, strings.Join(*s.changeKeys, ","+s.delimiter), s.delimiter, s.delimiter)
 	query += fmt.Sprintf(`VALUES (%v%s)%v`, s.delimiter, placeholders, s.delimiter)
 

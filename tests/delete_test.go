@@ -8,6 +8,7 @@ import (
 
 func TestDelete(t *testing.T) {
 	query, _, err := squrl.New("User").
+		SetSchema("public").
 		Delete().
 		Query()
 
@@ -24,6 +25,7 @@ func TestDelete(t *testing.T) {
 func TestDeleteWhere(t *testing.T) {
 	query, _, err := squrl.New("User").
 		Delete().
+		SetSchema("public").
 		Where([]squrl.WhereTerm{{
 			Field: "id",
 			Table: "User",
@@ -44,6 +46,7 @@ func TestDeleteWhere(t *testing.T) {
 func TestDeleteReturning(t *testing.T) {
 	query, _, err := squrl.New("User").
 		Delete().
+		SetSchema("public").
 		Where([]squrl.WhereTerm{{
 			Field: "id",
 			Table: "User",

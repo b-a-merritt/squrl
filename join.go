@@ -38,8 +38,12 @@ func (s *SQURL) Join(join JoinTerm) *SQURL {
 		(*s.fields)[fmt.Sprintf(`"%v".%v`, join.Tables.Right, field)] = true
 	}
 
-	joinTerm := fmt.Sprintf(`%v JOIN %v."%v"`, join.JoinType, s.schema, join.Tables.Right)
-	on := fmt.Sprintf(`%vON %v."%v".%v = %v."%v".%v`, s.delimiter, s.schema, join.Tables.Left, join.On.Left, s.schema, join.Tables.Right, join.On.Right)
+	schema := ""
+	if s.schema != "" {
+		schema = fmt.Sprintf("%v.", s.schema)
+	}
+	joinTerm := fmt.Sprintf(`%v JOIN %v"%v"`, join.JoinType, schema, join.Tables.Right)
+	on := fmt.Sprintf(`%vON %v"%v".%v = %v"%v".%v`, s.delimiter, schema, join.Tables.Left, join.On.Left, schema, join.Tables.Right, join.On.Right)
 
 	(*s.joinTerms)[joinTerm+on] = true
 

@@ -2,8 +2,11 @@ package squrl
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 )
+
+var aggFn = []string{"AVG", "COUNT", "MAX", "MIN", "SUM"}
 
 func (s *SQURL) Select(args ...string) *SQURL {
 	if val := s.validateType(); !val {
@@ -18,7 +21,13 @@ func (s *SQURL) Select(args ...string) *SQURL {
 
 	fields := make(map[string]bool)
 	for _, val := range args {
-		fields[fmt.Sprintf(`"%s".%s`, table, val)] = true
+		if slices.ContainsFunc(aggFn, func (fn string) bool {
+			return strings.HasPrefix(val, fn)
+		}) {
+			fields[val] = true
+		} else {
+			fields[fmt.Sprintf(`"%s".%s`, table, val)] = true
+		}
 	}
 
 	s.queryType = &t
@@ -48,8 +57,12 @@ func (s *SQURL) formatSelect() (string, []string, error) {
 	}
 
 	query := fmt.Sprintf("SELECT%v%v%v", s.delimiter, strings.Join(placeholders, ","), s.delimiter)
+	schema := ""
+	if s.schema != "" {
+		schema = fmt.Sprintf("%v.", s.schema)
+	}
 
-	query += fmt.Sprintf(`FROM%v%v."%v"%v`, s.delimiter, s.schema, s.table, s.delimiter)
+	query += fmt.Sprintf(`FROM%v%v"%v"%v`, s.delimiter, schema, s.table, s.delimiter)
 	if s.alias != nil {
 		query += fmt.Sprintf(`AS "%v"%v`, *s.alias, s.delimiter)
 	}
@@ -122,7 +135,11 @@ func (s *SQURL) formatSelect() (string, []string, error) {
 
 func (s *SQURL) enforceGroupByOnJoinKeys() {
 	if s.groupByTerms != nil && s.joinTableKeys != nil {
-		table := fmt.Sprintf(`%v."%v"`, s.schema, s.table)
+		schema := ""
+		if s.schema != "" {
+			schema = fmt.Sprintf("%v.", s.schema)
+		}
+		table := fmt.Sprintf(`%v"%v"`, schema, s.table)
 		if s.alias != nil {
 			table = *s.alias
 		}

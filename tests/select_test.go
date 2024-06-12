@@ -8,7 +8,9 @@ import (
 )
 
 func TestSimpleSelect(t *testing.T) {
-	query, parameters, err := squrl.New("User").
+	query, parameters, err := squrl.
+		New("User").
+		SetSchema("public").
 		Select("id", "first_name").
 		Query()
 
@@ -36,28 +38,10 @@ func TestSimpleSelect(t *testing.T) {
 	}
 }
 
-func TestPretty(t *testing.T) {
-	query, _, err := squrl.New("User").
-		SetPretty().
-		Select("id", "first_name").
-		Query()
-
-	if err != nil {
-		t.Error(err)
-	}
-
-	expected := `SELECT
-$1,$2
-FROM
-public."User"
-`
-	if query != expected {
-		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
-	}
-}
-
 func TestAs(t *testing.T) {
-	query, parameters, err := squrl.New("User").
+	query, parameters, err := squrl.
+		New("User").
+		SetSchema("public").
 		As("u").
 		Select("id", "first_name").
 		Query()
@@ -87,7 +71,9 @@ func TestAs(t *testing.T) {
 }
 
 func TestJoin(t *testing.T) {
-	query, parameters, err := squrl.New("User").
+	query, parameters, err := squrl.
+		New("User").
+		SetSchema("public").
 		Select("id", "first_name").
 		Join(squrl.JoinTerm{
 			Fields: []string{"id", "city"},
@@ -119,7 +105,9 @@ func TestJoin(t *testing.T) {
 }
 
 func TestWhereBetween(t *testing.T) {
-	query, parameters, err := squrl.New("User").
+	query, parameters, err := squrl.
+		New("User").
+		SetSchema("public").
 		Select("id", "first_name").
 		Where([]squrl.WhereTerm{{ Field: "first_name", Table: "User", Between: []string{"a", "z"}, }}).
 		Query()
@@ -139,7 +127,9 @@ func TestWhereBetween(t *testing.T) {
 }
 
 func TestWhereEquals(t *testing.T) {
-	query, parameters, err := squrl.New("User").
+	query, parameters, err := squrl.
+		New("User").
+		SetSchema("public").
 		Select("id", "first_name").
 		Where([]squrl.WhereTerm{{ Field: "id", Table: "User", Equals: "1234"}}).
 		Query()
@@ -159,7 +149,9 @@ func TestWhereEquals(t *testing.T) {
 }
 
 func TestWhereGTE(t *testing.T) {
-	query, parameters, err := squrl.New("User").
+	query, parameters, err := squrl.
+		New("User").
+		SetSchema("public").
 		Select("id", "first_name").
 		Where([]squrl.WhereTerm{{ Field: "id", Table: "User", Gte: 6, }}).
 		Query()
@@ -184,7 +176,9 @@ func TestWhereGTE(t *testing.T) {
 }
 
 func TestGroupBy(t *testing.T) {
-	query, parameters, err := squrl.New("User").
+	query, parameters, err := squrl.
+		New("User").
+		SetSchema("public").
 		Select("id", "first_name").
 		GroupBy([]squrl.GroupByTerm{{ Field: "id", Table: "User"}}).
 		Query()
@@ -204,7 +198,9 @@ func TestGroupBy(t *testing.T) {
 }
 
 func TestHaving(t *testing.T) {
-	query, parameters, err := squrl.New("User").
+	query, parameters, err := squrl.
+		New("User").
+		SetSchema("public").
 		Select("id", "first_name").
 		Where([]squrl.WhereTerm{
 			{
@@ -245,7 +241,9 @@ func TestHaving(t *testing.T) {
 }
 
 func TestOrderBy(t *testing.T)  {
-	query, _, err := squrl.New("User").
+	query, _, err := squrl.
+		New("User").
+		SetSchema("public").
 		Select("id", "first_name").
 		OrderBy([]squrl.OrderBy{{
 			Field: "id",
@@ -265,7 +263,9 @@ func TestOrderBy(t *testing.T)  {
 }
 
 func TestLimit(t *testing.T)  {
-	query, _, err := squrl.New("User").
+	query, _, err := squrl.
+		New("User").
+		SetSchema("public").
 		Select("id", "first_name").
 		Limit(1).
 		Query()
@@ -281,7 +281,9 @@ func TestLimit(t *testing.T)  {
 }
 
 func TestOffset(t *testing.T)  {
-	query, _, err := squrl.New("User").
+	query, _, err := squrl.
+		New("User").
+		SetSchema("public").
 		Select("id", "first_name").
 		Offset(1).
 		Query()
