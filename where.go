@@ -39,7 +39,7 @@ func (s *SQURL) Where(whereInput []WhereTerm) *SQURL {
 
 func (s *SQURL) findClause(whereInput WhereTerm) string {
 	if s.parameters == nil {
-		parameters := make([]string, 0)
+		parameters := make([]any, 0)
 		s.parameters = &parameters
 	}
 

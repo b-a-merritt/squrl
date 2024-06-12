@@ -25,12 +25,12 @@ func (s *SQURL) Update(setValues map[string]interface{}) *SQURL {
 	return s
 }
 
-func (s *SQURL) formatUpdate() (string, []string, error) {
+func (s *SQURL) formatUpdate() (string, []any, error) {
 	if s.err != nil {
-		return "", []string{}, s.err
+		return "", []any{}, s.err
 	}
 	if s.parameters == nil {
-		parameters := []string{}
+		parameters := []any{}
 		s.parameters = &parameters
 	}
 

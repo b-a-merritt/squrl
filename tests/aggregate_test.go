@@ -19,7 +19,7 @@ func TestAverage(t *testing.T) {
 		t.Error(err)
 	}
 	
-	expected := `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
+	var expected any = `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
 	if query != expected {
 		t.Errorf("query mismatch\nexpected:\n'%v'\n actual:\n'%v'", expected, query)
 	}
@@ -42,7 +42,7 @@ func TestCount(t *testing.T) {
 		t.Error(err)
 	}
 	
-	expected := `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
+	var expected any = `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
 	if query != expected {
 		t.Errorf("query mismatch\nexpected:\n'%v'\n actual:\n'%v'", expected, query)
 	}
@@ -65,7 +65,7 @@ func TestMax(t *testing.T) {
 		t.Error(err)
 	}
 	
-	expected := `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
+	var expected any = `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
 	if query != expected {
 		t.Errorf("query mismatch\nexpected:\n'%v'\n actual:\n'%v'", expected, query)
 	}
@@ -88,7 +88,7 @@ func TestMin(t *testing.T) {
 		t.Error(err)
 	}
 	
-	expected := `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
+	var expected any = `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
 	if query != expected {
 		t.Errorf("query mismatch\nexpected:\n'%v'\n actual:\n'%v'", expected, query)
 	}
@@ -111,7 +111,7 @@ func TestSum(t *testing.T) {
 		t.Error(err)
 	}
 	
-	expected := `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
+	var expected any = `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
 	if query != expected {
 		t.Errorf("query mismatch\nexpected:\n'%v'\n actual:\n'%v'", expected, query)
 	}

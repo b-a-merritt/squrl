@@ -36,9 +36,9 @@ func (s *SQURL) Select(args ...string) *SQURL {
 	return s
 }
 
-func (s *SQURL) formatSelect() (string, []string, error) {
+func (s *SQURL) formatSelect() (string, []any, error) {
 	if s.err != nil {
-		return "", []string{}, s.err
+		return "", []any{}, s.err
 	}
 
 	s.enforceGroupByOnJoinKeys()
@@ -46,7 +46,7 @@ func (s *SQURL) formatSelect() (string, []string, error) {
 	i := 0
 	placeholders := make([]string, len(*s.fields))
 	if s.parameters == nil {
-		parameters := make([]string, len(*s.fields))
+		parameters := make([]any, len(*s.fields))
 		s.parameters = &parameters
 	}
 

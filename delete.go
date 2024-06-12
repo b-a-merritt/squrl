@@ -11,12 +11,12 @@ func (s *SQURL) Delete() *SQURL {
 	return s
 }
 
-func (s *SQURL) formatDelete() (string, []string, error) {
+func (s *SQURL) formatDelete() (string, []any, error) {
 	if s.err != nil {
-		return "", []string{}, s.err
+		return "", []any{}, s.err
 	}
 	if s.parameters == nil {
-		parameters := []string{}
+		parameters := []any{}
 		s.parameters = &parameters
 	}
 

@@ -23,7 +23,7 @@ func TestUpdate(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := `UPDATE public."User" id = $1,first_name = $2, last_name = $3, interests = $4 `
+	var expected any = `UPDATE public."User" id = $1,first_name = $2, last_name = $3, interests = $4 `
 	if !strings.Contains(query, `UPDATE public."User" `) || 
 	!strings.Contains(query, "id = $") || 
 	!strings.Contains(query, "first_name = $") || 

@@ -18,7 +18,7 @@ func TestSimpleSelect(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := `SELECT $1,$2 FROM public."User" `
+	var expected any = `SELECT $1,$2 FROM public."User" `
 	if query != expected {
 		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
 	}
@@ -50,7 +50,7 @@ func TestAs(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := `SELECT $1,$2 FROM public."User" AS "u" `
+	var expected any = `SELECT $1,$2 FROM public."User" AS "u" `
 	if query != expected {
 		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
 	}
@@ -160,7 +160,7 @@ func TestWhereGTE(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := `SELECT $1,$2 FROM public."User" WHERE "User".id >= $3 `
+	var expected any = `SELECT $1,$2 FROM public."User" WHERE "User".id >= $3 `
 	if query != expected {
 		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
 	}

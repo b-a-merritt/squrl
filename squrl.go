@@ -14,7 +14,7 @@ type SQURL struct {
 	fields       *map[string]bool
 	changeKeys   *[]string
 	changeValues *[]string
-	parameters   *[]string
+	parameters   *[]any
 
 	joinTerms     *map[string]bool
 	joinTableKeys *map[string]bool
@@ -44,7 +44,7 @@ func New(table string) *SQURL {
 	return &squrl
 }
 
-func (s *SQURL) Query() (query string, parameters []string, err error) {
+func (s *SQURL) Query() (query string, parameters []any, err error) {
 	if *s.queryType == selectType {
 		return s.formatSelect()
 	}
@@ -58,5 +58,5 @@ func (s *SQURL) Query() (query string, parameters []string, err error) {
 		return s.formatDelete()
 	}
 
-	return "", []string{}, fmt.Errorf("no query type used")
+	return "", []any{}, fmt.Errorf("no query type used")
 }

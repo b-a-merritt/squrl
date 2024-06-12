@@ -26,9 +26,9 @@ func (s *SQURL) Insert(setValues map[string]interface{}) *SQURL {
 	return s
 }
 
-func (s *SQURL) formatInsert() (query string, parameters []string, err error) {
+func (s *SQURL) formatInsert() (query string, parameters []any, err error) {
 	if s.err != nil {
-		return "", []string{}, s.err
+		return "", []any{}, s.err
 	}
 
 	placeholders := ""

@@ -24,7 +24,7 @@ func TestInsert(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := `INSERT INTO public."User" ( id, first_name, last_name, interests ) VALUES ( $1, $2, $3, $4 ) `
+	var expected any = `INSERT INTO public."User" ( id, first_name, last_name, interests ) VALUES ( $1, $2, $3, $4 ) `
 	if !strings.HasPrefix(query, `INSERT INTO public."User" ( `) || !strings.HasSuffix(query, `) VALUES ( $1, $2, $3, $4 ) `) {
 		t.Errorf("query mismatch\nexpected:\n'%v'\n actual:\n'%v'", expected, query)
 	}
