@@ -1,17 +1,16 @@
 package tests
 
 import (
-	"slices"
 	"testing"
 
 	"github.com/b-a-merritt/squrl"
 )
 
 func TestAverage(t *testing.T) {
-	query, parameters, err := squrl.
+	query, _, err := squrl.
 		New("User").
 		SetSchema("public").
-		Select(squrl.Avg("age", "User"), "id").
+		Select(squrl.Avg("age", "User")).
 		GroupBy([]squrl.GroupByTerm{{Field: "id", Table: "User"}}).
 		Query()
 
@@ -19,22 +18,17 @@ func TestAverage(t *testing.T) {
 		t.Error(err)
 	}
 	
-	var expected any = `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
+	expected := `SELECT AVG("User".age) FROM public."User" GROUP BY "User".id `
 	if query != expected {
 		t.Errorf("query mismatch\nexpected:\n'%v'\n actual:\n'%v'", expected, query)
-	}
-
-	expected = `AVG("User".age)`
-	if !slices.Contains(parameters, expected) {
-		t.Error("parameters missing aggregate function: ", expected)
 	}
 }
 
 func TestCount(t *testing.T) {
-	query, parameters, err := squrl.
+	query, _, err := squrl.
 		New("User").
 		SetSchema("public").
-		Select(squrl.Count("id", "User"), "id").
+		Select(squrl.Count("id", "User")).
 		GroupBy([]squrl.GroupByTerm{{Field: "id", Table: "User"}}).
 		Query()
 
@@ -42,22 +36,17 @@ func TestCount(t *testing.T) {
 		t.Error(err)
 	}
 	
-	var expected any = `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
+	expected := `SELECT COUNT("User".id) FROM public."User" GROUP BY "User".id `
 	if query != expected {
 		t.Errorf("query mismatch\nexpected:\n'%v'\n actual:\n'%v'", expected, query)
-	}
-
-	expected = `COUNT("User".id)`
-	if !slices.Contains(parameters, expected) {
-		t.Error("parameters missing aggregate function: ", expected)
 	}
 }
 
 func TestMax(t *testing.T) {
-	query, parameters, err := squrl.
+	query, _, err := squrl.
 		New("User").
 		SetSchema("public").
-		Select(squrl.Max("age", "User"), "id").
+		Select(squrl.Max("age", "User")).
 		GroupBy([]squrl.GroupByTerm{{Field: "id", Table: "User"}}).
 		Query()
 
@@ -65,22 +54,17 @@ func TestMax(t *testing.T) {
 		t.Error(err)
 	}
 	
-	var expected any = `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
+	expected := `SELECT MAX("User".age) FROM public."User" GROUP BY "User".id `
 	if query != expected {
 		t.Errorf("query mismatch\nexpected:\n'%v'\n actual:\n'%v'", expected, query)
-	}
-
-	expected = `MAX("User".age)`
-	if !slices.Contains(parameters, expected) {
-		t.Error("parameters missing aggregate function: ", expected)
 	}
 }
 
 func TestMin(t *testing.T) {
-	query, parameters, err := squrl.
+	query, _, err := squrl.
 		New("User").
 		SetSchema("public").
-		Select(squrl.Min("age", "User"), "id").
+		Select(squrl.Min("age", "User")).
 		GroupBy([]squrl.GroupByTerm{{Field: "id", Table: "User"}}).
 		Query()
 
@@ -88,22 +72,17 @@ func TestMin(t *testing.T) {
 		t.Error(err)
 	}
 	
-	var expected any = `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
+	expected := `SELECT MIN("User".age) FROM public."User" GROUP BY "User".id `
 	if query != expected {
 		t.Errorf("query mismatch\nexpected:\n'%v'\n actual:\n'%v'", expected, query)
-	}
-
-	expected = `MIN("User".age)`
-	if !slices.Contains(parameters, expected) {
-		t.Error("parameters missing aggregate function: ", expected)
 	}
 }
 
 func TestSum(t *testing.T) {
-	query, parameters, err := squrl.
+	query, _, err := squrl.
 		New("User").
 		SetSchema("public").
-		Select(squrl.Sum("age", "User"), "id").
+		Select(squrl.Sum("age", "User")).
 		GroupBy([]squrl.GroupByTerm{{Field: "id", Table: "User"}}).
 		Query()
 
@@ -111,13 +90,8 @@ func TestSum(t *testing.T) {
 		t.Error(err)
 	}
 	
-	var expected any = `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
+	expected := `SELECT SUM("User".age) FROM public."User" GROUP BY "User".id `
 	if query != expected {
 		t.Errorf("query mismatch\nexpected:\n'%v'\n actual:\n'%v'", expected, query)
-	}
-
-	expected = `SUM("User".age)`
-	if !slices.Contains(parameters, expected) {
-		t.Error("parameters missing aggregate function: ", expected)
 	}
 }

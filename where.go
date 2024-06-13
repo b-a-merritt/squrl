@@ -46,35 +46,35 @@ func (s *SQURL) findClause(whereInput WhereTerm) string {
 	placeholderLen := len(*s.parameters) + 1
 
 	if whereInput.Between != nil {
-		*s.parameters = append(*s.parameters, s.formatValue(whereInput.Between[0]))
-		*s.parameters = append(*s.parameters, s.formatValue(whereInput.Between[1]))
+		*s.parameters = append(*s.parameters, whereInput.Between[0])
+		*s.parameters = append(*s.parameters, whereInput.Between[1])
 		return fmt.Sprintf("%s $%v AND $%v", BETWEEN, placeholderLen, placeholderLen+1)
 	} else if whereInput.Equals != nil {
-		*s.parameters = append(*s.parameters, s.formatValue(whereInput.Equals))
+		*s.parameters = append(*s.parameters, whereInput.Equals)
 		return fmt.Sprintf("%s $%v", EQUALS, placeholderLen)
 	} else if whereInput.Gt != nil {
-		*s.parameters = append(*s.parameters, s.formatValue(whereInput.Gt))
+		*s.parameters = append(*s.parameters, whereInput.Gt)
 		return fmt.Sprintf("%s $%v", GT, placeholderLen)
 	} else if whereInput.Gte != nil {
-		*s.parameters = append(*s.parameters, s.formatValue(whereInput.Gte))
+		*s.parameters = append(*s.parameters, whereInput.Gte)
 		return fmt.Sprintf("%s $%v", GTE, placeholderLen)
 	} else if whereInput.In != nil {
-		*s.parameters = append(*s.parameters, s.formatValue(whereInput.In))
+		*s.parameters = append(*s.parameters, whereInput.In)
 		return fmt.Sprintf("%s $%v", IN, placeholderLen)
 	} else if whereInput.Is != nil {
-		*s.parameters = append(*s.parameters, s.formatValue(whereInput.Is))
+		*s.parameters = append(*s.parameters, whereInput.Is)
 		return fmt.Sprintf("%s $%v", IS, placeholderLen)
 	} else if whereInput.IsNot != nil {
-		*s.parameters = append(*s.parameters, s.formatValue(whereInput.IsNot))
+		*s.parameters = append(*s.parameters, whereInput.IsNot)
 		return fmt.Sprintf("%s $%v", ISNOT, placeholderLen)
 	} else if whereInput.Like != nil {
-		*s.parameters = append(*s.parameters, s.formatValue(whereInput.Like))
+		*s.parameters = append(*s.parameters, whereInput.Like)
 		return fmt.Sprintf("%s $%v", LIKE, placeholderLen)
 	} else if whereInput.Lt != nil {
-		*s.parameters = append(*s.parameters, s.formatValue(whereInput.Lt))
+		*s.parameters = append(*s.parameters, whereInput.Lt)
 		return fmt.Sprintf("%s $%v", LT, placeholderLen)
 	} else if whereInput.Lte != nil {
-		*s.parameters = append(*s.parameters, s.formatValue(whereInput.Lte))
+		*s.parameters = append(*s.parameters, whereInput.Lte)
 		return fmt.Sprintf("%s $%v", LTE, placeholderLen)
 	} else {
 		s.err = fmt.Errorf("clause operator is not recognized on field %v", whereInput.Field)

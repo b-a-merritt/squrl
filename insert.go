@@ -12,11 +12,11 @@ func (s *SQURL) Insert(setValues map[string]interface{}) *SQURL {
 
 	t := insertType
 	changeKeys := make([]string, 0)
-	changeValues := make([]string, 0)
+	changeValues := make([]any, 0)
 
 	for key, value := range setValues {
 		changeKeys = append(changeKeys, key)
-		changeValues = append(changeValues, s.formatValue(value))
+		changeValues = append(changeValues, value)
 	}
 
 	s.queryType = &t
@@ -34,10 +34,10 @@ func (s *SQURL) formatInsert() (query string, parameters []any, err error) {
 	placeholders := ""
 
 	for i, val := range *s.changeValues {
-		if i < len(*s.changeKeys) - 1 {
-			placeholders += fmt.Sprintf("$%v,%v", i + 1, s.delimiter)
+		if i < len(*s.changeKeys)-1 {
+			placeholders += fmt.Sprintf("$%v,%v", i+1, s.delimiter)
 		} else {
-			placeholders += fmt.Sprintf("$%v%v", i + 1, s.delimiter)
+			placeholders += fmt.Sprintf("$%v%v", i+1, s.delimiter)
 		}
 		parameters = append(parameters, val)
 	}
@@ -52,9 +52,9 @@ func (s *SQURL) formatInsert() (query string, parameters []any, err error) {
 
 	if s.fields != nil {
 		fieldParams := ""
-		i := 1
+		i := len(*s.changeKeys) + 1
 		for val := range *s.fields {
-			if i < len(*s.fields) {
+			if i < len(*s.fields)+len(*s.changeKeys) {
 				placeholders += fmt.Sprintf("$%v,%v", i, s.delimiter)
 				fieldParams += fmt.Sprintf("$%v,%v", i, s.delimiter)
 			} else {

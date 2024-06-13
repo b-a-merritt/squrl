@@ -16,7 +16,7 @@ func TestNoSchema(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := `SELECT $1 FROM "User" `
+	expected := `SELECT "User".id FROM "User" `
 	if query != expected {
 		t.Errorf("query mismatch\nexpected:\n'%v'\n actual:\n'%v'", expected, query)
 	}
@@ -27,7 +27,7 @@ func TestPretty(t *testing.T) {
 		New("User").
 		SetSchema("public").
 		SetPretty().
-		Select("id", "first_name").
+		Select("id").
 		Query()
 
 	if err != nil {
@@ -35,7 +35,7 @@ func TestPretty(t *testing.T) {
 	}
 
 	expected := `SELECT
-$1,$2
+"User".id
 FROM
 public."User"
 `

@@ -13,7 +13,7 @@ type SQURL struct {
 
 	fields       *map[string]bool
 	changeKeys   *[]string
-	changeValues *[]string
+	changeValues *[]any
 	parameters   *[]any
 
 	joinTerms     *map[string]bool

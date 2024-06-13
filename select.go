@@ -43,20 +43,20 @@ func (s *SQURL) formatSelect() (string, []any, error) {
 
 	s.enforceGroupByOnJoinKeys()
 
-	i := 0
-	placeholders := make([]string, len(*s.fields))
 	if s.parameters == nil {
-		parameters := make([]any, len(*s.fields))
+		parameters := make([]any, 0)
 		s.parameters = &parameters
 	}
 
+	i := 0
+	fields := make([]string, len(*s.fields))
+
 	for val := range *s.fields {
-		placeholders[i] = fmt.Sprintf("$%v", i+1)
-		(*s.parameters)[i] = val
+		fields[i] = fmt.Sprintf("%v", val)
 		i++
 	}
 
-	query := fmt.Sprintf("SELECT%v%v%v", s.delimiter, strings.Join(placeholders, ","), s.delimiter)
+	query := fmt.Sprintf("SELECT%v%v%v", s.delimiter, strings.Join(fields, ","), s.delimiter)
 	schema := ""
 	if s.schema != "" {
 		schema = fmt.Sprintf("%v.", s.schema)

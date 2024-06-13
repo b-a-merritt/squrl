@@ -31,17 +31,17 @@ func TestUpdate(t *testing.T) {
 		t.Errorf("query mismatch\nexpected:\n'%v'\n actual:\n'%v'", expected, query)
 	}
  
-	expected = "6"
+	expected = 6
 	if !slices.Contains(parameters, expected) {
 		t.Errorf(`parameter mismatch - parameters '%v' do not contain %v`, parameters, expected)
 	}
 
-	expected = "'ben'"
+	expected = "ben"
 	if !slices.Contains(parameters, expected) {
 		t.Errorf(`parameter mismatch - parameters '%v' do not contain %v`, parameters, expected)
 	}
 
-	expected = "'merritt'"
+	expected = "merritt"
 	if !slices.Contains(parameters, expected) {
 		t.Errorf(`parameter mismatch - parameters '%v' do not contain %v`, parameters, expected)
 	}

@@ -2,6 +2,7 @@ package tests
 
 import (
 	"slices"
+	"strings"
 	"testing"
 
 	"github.com/b-a-merritt/squrl"
@@ -18,23 +19,23 @@ func TestSimpleSelect(t *testing.T) {
 		t.Error(err)
 	}
 
-	var expected any = `SELECT $1,$2 FROM public."User" `
-	if query != expected {
+	expected := `SELECT "User".id,"User".first_name FROM public."User" `
+	if !strings.HasPrefix(query, "SELECT ") || !strings.HasSuffix(query, ` FROM public."User" `) {
 		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
 	}
 
-	if len(parameters) != 2 {
-		t.Errorf("not enough parameters from query")
+	if len(parameters) != 0 {
+		t.Errorf("too many parameters for query")
 	}
 
 	expected = `"User".id`
-	if !slices.Contains(parameters, expected) {
-		t.Errorf(`parameter mismatch - parameters '%v' do not contain %v`, parameters, expected)
+	if !strings.Contains(query, expected) {
+		t.Errorf(`query mismatch - expected '%v' | actual '%v'`, expected, query)
 	}
 
 	expected = `"User".first_name`
-	if !slices.Contains(parameters, expected) {
-		t.Errorf(`parameter mismatch - parameters '%v' do not contain %v`, parameters, expected)
+	if !strings.Contains(query, expected) {
+		t.Errorf(`query mismatch - expected '%v' | actual '%v'`, expected, query)
 	}
 }
 
@@ -43,30 +44,20 @@ func TestAs(t *testing.T) {
 		New("User").
 		SetSchema("public").
 		As("u").
-		Select("id", "first_name").
+		Select("id").
 		Query()
 
 	if err != nil {
 		t.Error(err)
 	}
 
-	var expected any = `SELECT $1,$2 FROM public."User" AS "u" `
+	var expected any = `SELECT "u".id FROM public."User" AS "u" `
 	if query != expected {
 		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
 	}
 
-	if len(parameters) != 2 {
-		t.Errorf("not enough parameters from query")
-	}
-
-	expected = `"u".id`
-	if !slices.Contains(parameters, expected) {
-		t.Errorf(`parameter mismatch - parameters '%v' do not contain %v`, parameters, expected)
-	}
-
-	expected = `"u".first_name`
-	if !slices.Contains(parameters, expected) {
-		t.Errorf(`parameter mismatch - parameters '%v' do not contain %v`, parameters, expected)
+	if len(parameters) != 0 {
+		t.Errorf("too many parameters in query")
 	}
 }
 
@@ -94,21 +85,42 @@ func TestJoin(t *testing.T) {
 		t.Error(err)
 	}
 
-	if len(parameters) != 4 {
-		t.Errorf("not enough parameters from query")
+	if len(parameters) != 0 {
+		t.Errorf("too many parameters in query")
 	}
 
 	expected := `SELECT $1,$2,$3,$4 FROM public."User" LEFT JOIN public."ContactInfo" ON public."User".id = public."ContactInfo".user_id`
-	if query != expected {
+	if !strings.HasSuffix(query, ` FROM public."User" LEFT JOIN public."ContactInfo" ON public."User".id = public."ContactInfo".user_id`){
 		t.Errorf("query mismatch - \nexpected:\n'%v' | \nactual:\n'%v'", expected, query)
 	}
+
+	expected = `"User".id`
+	if !strings.Contains(query, expected) {
+		t.Errorf("query is missing field: %v", expected)
+	}
+
+	expected = `"User".first_name`
+	if !strings.Contains(query, expected) {
+		t.Errorf("query is missing field: %v", expected)
+	}
+	
+	expected = `"ContactInfo".id`
+	if !strings.Contains(query, expected) {
+		t.Errorf("query is missing field: %v", expected)
+	}
+	
+	expected = `"ContactInfo".city`
+	if !strings.Contains(query, expected) {
+		t.Errorf("query is missing field: %v", expected)
+	}
+	
 }
 
 func TestWhereBetween(t *testing.T) {
-	query, parameters, err := squrl.
+	query, _, err := squrl.
 		New("User").
 		SetSchema("public").
-		Select("id", "first_name").
+		Select("id").
 		Where([]squrl.WhereTerm{{ Field: "first_name", Table: "User", Between: []string{"a", "z"}, }}).
 		Query()
 
@@ -116,21 +128,17 @@ func TestWhereBetween(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := `SELECT $1,$2 FROM public."User" WHERE "User".first_name BETWEEN $3 AND $4 `
+	expected := `SELECT "User".id FROM public."User" WHERE "User".first_name BETWEEN $1 AND $2 `
 	if query != expected {
 		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
-	}
-
-	if len(parameters) != 4 {
-		t.Errorf("not enough parameters from query")
 	}
 }
 
 func TestWhereEquals(t *testing.T) {
-	query, parameters, err := squrl.
+	query, _, err := squrl.
 		New("User").
 		SetSchema("public").
-		Select("id", "first_name").
+		Select("id").
 		Where([]squrl.WhereTerm{{ Field: "id", Table: "User", Equals: "1234"}}).
 		Query()
 
@@ -138,48 +146,41 @@ func TestWhereEquals(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := `SELECT $1,$2 FROM public."User" WHERE "User".id = $3 `
+	expected := `SELECT "User".id FROM public."User" WHERE "User".id = $1 `
 	if query != expected {
 		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
-	}
-
-	if len(parameters) != 3 {
-		t.Errorf("not enough parameters from query")
 	}
 }
 
 func TestWhereGTE(t *testing.T) {
+	var gte any = 6
 	query, parameters, err := squrl.
 		New("User").
 		SetSchema("public").
-		Select("id", "first_name").
-		Where([]squrl.WhereTerm{{ Field: "id", Table: "User", Gte: 6, }}).
+		Select("id").
+		Where([]squrl.WhereTerm{{ Field: "id", Table: "User", Gte: gte, }}).
 		Query()
 
 	if err != nil {
 		t.Error(err)
 	}
 
-	var expected any = `SELECT $1,$2 FROM public."User" WHERE "User".id >= $3 `
+	var expected any = `SELECT "User".id FROM public."User" WHERE "User".id >= $1 `
 	if query != expected {
 		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
 	}
 
-	if len(parameters) != 3 {
-		t.Errorf("not enough parameters from query")
-	}
 
-	expected = "6"
-	if !slices.Contains(parameters, expected) {
-		t.Errorf(`parameter mismatch - parameters '%v' do not contain %v`, parameters, expected)
+	if !slices.Contains(parameters, gte) {
+		t.Errorf("parameters did not contain %v", gte)
 	}
 }
 
 func TestGroupBy(t *testing.T) {
-	query, parameters, err := squrl.
+	query, _, err := squrl.
 		New("User").
 		SetSchema("public").
-		Select("id", "first_name").
+		Select("id").
 		GroupBy([]squrl.GroupByTerm{{ Field: "id", Table: "User"}}).
 		Query()
 
@@ -187,13 +188,9 @@ func TestGroupBy(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := `SELECT $1,$2 FROM public."User" GROUP BY "User".id `
+	expected := `SELECT "User".id FROM public."User" GROUP BY "User".id `
 	if query != expected {
 		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
-	}
-
-	if len(parameters) != 2 {
-		t.Errorf("not enough parameters from query")
 	}
 }
 
@@ -201,7 +198,7 @@ func TestHaving(t *testing.T) {
 	query, parameters, err := squrl.
 		New("User").
 		SetSchema("public").
-		Select("id", "first_name").
+		Select("id").
 		Where([]squrl.WhereTerm{
 			{
 				Table: "User",
@@ -230,12 +227,12 @@ func TestHaving(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := `SELECT $1,$2 FROM public."User" WHERE "User".id = $3 GROUP BY "User".id HAVING "User".id = $4 AND "User".first_name = $5 `
+	expected := `SELECT "User".id FROM public."User" WHERE "User".id = $1 GROUP BY "User".id HAVING "User".id = $2 AND "User".first_name = $3 `
 	if query != expected {
 		t.Errorf("query mismatch - \nexpected:\n'%v' | \nactual:\n'%v'", expected, query)
 	}
 
-	if len(parameters) != 5 {
+	if len(parameters) != 3 {
 		t.Errorf("not enough parameters from query")
 	}
 }
@@ -244,7 +241,7 @@ func TestOrderBy(t *testing.T)  {
 	query, _, err := squrl.
 		New("User").
 		SetSchema("public").
-		Select("id", "first_name").
+		Select("id").
 		OrderBy([]squrl.OrderBy{{
 			Field: "id",
 			Table: "User",
@@ -256,7 +253,7 @@ func TestOrderBy(t *testing.T)  {
 		t.Error(err)
 	}
 
-	expected := `SELECT $1,$2 FROM public."User" ORDER BY "User".id ASC `;
+	expected := `SELECT "User".id FROM public."User" ORDER BY "User".id ASC `;
 	if query != expected {
 		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
 	}
@@ -266,7 +263,7 @@ func TestLimit(t *testing.T)  {
 	query, _, err := squrl.
 		New("User").
 		SetSchema("public").
-		Select("id", "first_name").
+		Select("id").
 		Limit(1).
 		Query()
 
@@ -274,7 +271,7 @@ func TestLimit(t *testing.T)  {
 		t.Error(err)
 	}
 
-	expected := `SELECT $1,$2 FROM public."User" LIMIT 1`;
+	expected := `SELECT "User".id FROM public."User" LIMIT 1`;
 	if query != expected {
 		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
 	}
@@ -284,7 +281,7 @@ func TestOffset(t *testing.T)  {
 	query, _, err := squrl.
 		New("User").
 		SetSchema("public").
-		Select("id", "first_name").
+		Select("id").
 		Offset(1).
 		Query()
 
@@ -292,7 +289,7 @@ func TestOffset(t *testing.T)  {
 		t.Error(err)
 	}
 
-	expected := `SELECT $1,$2 FROM public."User" OFFSET 1`;
+	expected := `SELECT "User".id FROM public."User" OFFSET 1`;
 	if query != expected {
 		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
 	}

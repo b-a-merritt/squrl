@@ -11,11 +11,11 @@ func (s *SQURL) Update(setValues map[string]interface{}) *SQURL {
 
 	t := updateType
 	changeKeys := make([]string, 0)
-	changeValues := make([]string, 0)
+	changeValues := make([]any, 0)
 
 	for key, value := range setValues {
 		changeKeys = append(changeKeys, key)
-		changeValues = append(changeValues, s.formatValue(value))
+		changeValues = append(changeValues, value)
 	}
 
 	s.queryType = &t
