@@ -271,7 +271,7 @@ func TestLimit(t *testing.T)  {
 		t.Error(err)
 	}
 
-	expected := `SELECT "User".id FROM public."User" LIMIT 1`;
+	expected := `SELECT "User".id FROM public."User" LIMIT 1 `;
 	if query != expected {
 		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
 	}
@@ -282,6 +282,7 @@ func TestOffset(t *testing.T)  {
 		New("User").
 		SetSchema("public").
 		Select("id").
+		Limit(1).
 		Offset(1).
 		Query()
 
@@ -289,7 +290,7 @@ func TestOffset(t *testing.T)  {
 		t.Error(err)
 	}
 
-	expected := `SELECT "User".id FROM public."User" OFFSET 1`;
+	expected := `SELECT "User".id FROM public."User" LIMIT 1 OFFSET 1`;
 	if query != expected {
 		t.Errorf("query mismatch - expected '%v' | actual '%v'", expected, query)
 	}

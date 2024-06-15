@@ -124,7 +124,7 @@ func (s *SQURL) formatSelect() (string, []any, error) {
 	query += join + where + groupBy + having + orderBy
 
 	if s.limit != nil {
-		query += fmt.Sprintf(`LIMIT %v`, *s.limit)
+		query += fmt.Sprintf(`LIMIT %v%v`, *s.limit, s.delimiter)
 	}
 	if s.offset != nil {
 		query += fmt.Sprintf(`OFFSET %v`, *s.offset)
