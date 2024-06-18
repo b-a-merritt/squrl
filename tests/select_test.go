@@ -89,8 +89,8 @@ func TestJoin(t *testing.T) {
 		t.Errorf("too many parameters in query")
 	}
 
-	expected := `SELECT $1,$2,$3,$4 FROM public."User" LEFT JOIN public."ContactInfo" ON public."User".id = public."ContactInfo".user_id`
-	if !strings.HasSuffix(query, ` FROM public."User" LEFT JOIN public."ContactInfo" ON public."User".id = public."ContactInfo".user_id`){
+	expected := `SELECT "User".id,"User".first_name,"ContactInfo".id,"ContactInfo".city FROM public."User" FROM public."User" LEFT JOIN public."ContactInfo" ON public."User".id = public."ContactInfo".user_id `
+	if !strings.HasSuffix(query, ` FROM public."User" LEFT JOIN public."ContactInfo" ON public."User".id = public."ContactInfo".user_id `){
 		t.Errorf("query mismatch - \nexpected:\n'%v' | \nactual:\n'%v'", expected, query)
 	}
 
