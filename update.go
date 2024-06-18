@@ -40,14 +40,13 @@ func (s *SQURL) formatUpdate() (string, []any, error) {
 	}
 	query := fmt.Sprintf(`UPDATE %v"%v"%v`, schema, s.table, s.delimiter)
 	for i, val := range *s.changeValues {
-		if i < len(*s.changeValues) - 1 {
-			query += fmt.Sprintf("%v = $%v,%v", (*s.changeKeys)[i], i + 1, s.delimiter)
+		if i < len(*s.changeValues)-1 {
+			query += fmt.Sprintf("%v = $%v,%v", (*s.changeKeys)[i], i+1, s.delimiter)
 		} else {
-			query += fmt.Sprintf("%v = $%v%v", (*s.changeKeys)[i], i + 1, s.delimiter)
+			query += fmt.Sprintf("%v = $%v%v", (*s.changeKeys)[i], i+1, s.delimiter)
 		}
 		*s.parameters = append(*s.parameters, val)
 	}
-
 
 	return query, *s.parameters, nil
 }

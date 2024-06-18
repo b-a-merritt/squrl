@@ -27,8 +27,8 @@ func TestDeleteWhere(t *testing.T) {
 		Delete().
 		SetSchema("public").
 		Where([]squrl.WhereTerm{{
-			Field: "id",
-			Table: "User",
+			Field:  "id",
+			Table:  "User",
 			Equals: 1,
 		}}).
 		Query()
@@ -48,8 +48,8 @@ func TestDeleteReturning(t *testing.T) {
 		Delete().
 		SetSchema("public").
 		Where([]squrl.WhereTerm{{
-			Field: "id",
-			Table: "User",
+			Field:  "id",
+			Table:  "User",
 			Equals: 1,
 		}}).
 		Returning("id", "first_name").

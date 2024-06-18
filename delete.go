@@ -47,11 +47,11 @@ func (s *SQURL) formatDelete() (string, []any, error) {
 
 		for val := range *s.fields {
 			*s.parameters = append(*s.parameters, val)
-			placeholders[i] = fmt.Sprintf("$%v", i + 1 + whereLength)
+			placeholders[i] = fmt.Sprintf("$%v", i+1+whereLength)
 			i++
 		}
 
-		query += fmt.Sprintf(`RETURNING %v`, strings.Join(placeholders, "," + s.delimiter))
+		query += fmt.Sprintf(`RETURNING %v`, strings.Join(placeholders, ","+s.delimiter))
 	}
 
 	return query, *s.parameters, nil

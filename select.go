@@ -21,7 +21,7 @@ func (s *SQURL) Select(args ...string) *SQURL {
 
 	fields := make(map[string]bool)
 	for _, val := range args {
-		if slices.ContainsFunc(aggFn, func (fn string) bool {
+		if slices.ContainsFunc(aggFn, func(fn string) bool {
 			return strings.HasPrefix(val, fn)
 		}) {
 			fields[val] = true

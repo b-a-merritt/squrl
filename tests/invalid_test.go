@@ -11,7 +11,7 @@ func TestMultipleTypes(t *testing.T) {
 		New("User").
 		SetSchema("public").
 		Select("id").
-		Update(map[string]interface{}{"id":6}).
+		Update(map[string]interface{}{"id": 6}).
 		Query()
 
 	if query != "" || err == nil {
