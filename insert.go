@@ -52,16 +52,14 @@ func (s *SQURL) formatInsert() (query string, parameters []any, err error) {
 
 	if s.fields != nil {
 		fieldParams := ""
-		i := len(*s.changeKeys) + 1
+		i := 0
 		for val := range *s.fields {
-			if i < len(*s.fields)+len(*s.changeKeys) {
-				placeholders += fmt.Sprintf("$%v,%v", i, s.delimiter)
-				fieldParams += fmt.Sprintf("$%v,%v", i, s.delimiter)
+			fieldParams += fmt.Sprintf(`"%v".%v`, s.table, val)
+			if i < len(*s.fields)-1 {
+				fieldParams += fmt.Sprintf(",%v", s.delimiter)
 			} else {
-				placeholders += fmt.Sprintf("$%v%v", i, s.delimiter)
-				fieldParams += fmt.Sprintf("$%v%v", i, s.delimiter)
+				fieldParams += s.delimiter
 			}
-			parameters = append(parameters, val)
 			i++
 		}
 		query += fmt.Sprintf(`RETURNING %s`, fieldParams)

@@ -59,10 +59,10 @@ func TestReturning(t *testing.T) {
 		t.Error(err)
 	}
 
-	expected := `INSERT INTO public."User" ( id, first_name, last_name ) VALUES ( $1, $2, $3 ) RETURNING $4, $5, $6 `
+	expected := `INSERT INTO public."User" ( id, first_name, last_name ) VALUES ( $1, $2, $3 ) RETURNING "User".id, "User".first_name, "User".last_name `
 	if !strings.HasPrefix(query, `INSERT INTO public."User" ( `) ||
 		!strings.Contains(query, `) VALUES ( $1, $2, $3 ) `) ||
-		!strings.HasSuffix(query, `RETURNING $4, $5, $6 `) {
+		!strings.HasSuffix(query, `RETURNING "User".id, "User".first_name, "User".last_name `) {
 		t.Errorf("query mismatch\nexpected:\n'%v'\n actual:\n'%v'", expected, query)
 	}
 }
